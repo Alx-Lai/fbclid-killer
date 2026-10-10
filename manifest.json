@@ -1,18 +1,27 @@
 {
   "name": "fbclid Killer",
-  "description": "Remove annoying fbclid from your browser",
-  "version": "0.1",
+  "description": "Remove annoying fbclid tracking parameter before it ever leaves your browser",
+  "version": "1.0",
   "manifest_version": 3,
-  "content_scripts": [
-    {
-      "js": ["scripts/content.js"],
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ],
-      "exclude_matches": [
-        "https://www.facebook.com/*"
-      ]
-    }
-  ]
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_fbclid",
+        "enabled": true,
+        "path": "rules/strip_fbclid.json"
+      }
+    ]
+  }
 }
