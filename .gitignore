@@ -1,0 +1,10 @@
+# Chrome generated files
+_metadata/
+
+# macOS system files
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
+

@@ -1,16 +1,25 @@
 # fbclid Killer
 
-A Chrome extension that removes the `fbclid` tracking parameter from URLs **before the request ever leaves your browser**.
+A lightweight, privacy-focused Chrome extension (Manifest V3) that stops Facebook / Meta click tracking, Meta Pixel tracking, and 1st-party cookie tracking (`_fbp` and `_fbc`).
 
-Unlike content-script approaches that clean the URL after page load, this extension uses Chrome's `declarativeNetRequest` API to strip `fbclid` at the network level — the tracking parameter is never sent to the destination server.
+## What it blocks
 
-## How it works
+1. **`fbclid` & Facebook URL Trackers**:
+   - Strips `fbclid`, `fb_action_ids`, `fb_action_types`, `fb_source`, and `fb_ref` from URLs before the navigation request leaves your browser via `declarativeNetRequest`.
+   - Prevents landing pages from receiving the click identifier.
 
-A single declarative rule intercepts all navigations (main frame and sub-frame) and removes the `fbclid` query parameter via a URL transform. No content scripts, no background service workers, no permissions beyond `declarativeNetRequest`.
+2. **Meta Pixel & Tracking Beacons**:
+   - Blocks `connect.facebook.net/*fbevents.js` (Meta Pixel library).
+   - Blocks `connect.facebook.net/signals/*` (Meta AAM / Signals).
+   - Blocks `facebook.com/tr` and `facebook.net/tr` tracking beacons on third-party websites.
+
+3. **1st-Party Tracking Cookies (`_fbp` and `_fbc`)**:
+   - **In-Page JavaScript Protection (`MAIN` world)**: Intercepts `document.cookie` setters and getters at `document_start`. Prevents scripts from writing `_fbp` / `_fbc` to the cookie store and masks them from client reads.
+   - **Background Service Worker**: Continuously monitors `chrome.cookies.onChanged` to purge any `_fbp` or `_fbc` cookies created via HTTP response headers (`Set-Cookie`), neutralizing **Meta Conversions API (CAPI)** server-to-server tracking.
 
 ## Installation
 
-1. Go to [chrome://extensions/](chrome://extensions/) in Chrome.
+1. Open [chrome://extensions/](chrome://extensions/) in Chrome.
 2. Enable **Developer mode** (toggle in the top-right corner).
-3. Click **Load unpacked** and select this folder.
-4. Done — `fbclid` is now stripped from every URL you visit.
+3. Click **Load unpacked** (or click the reload icon if already loaded) and select this folder.
+4. Enjoy a cleaner, tracker-free browsing experience.
